@@ -252,27 +252,33 @@ biodiversity loss, and ecological damage arising from food system activities.
 function submitSurvey() {
   const inputs = document.querySelectorAll("input, textarea");
   let data = {};
+  inputs.forEach(input => { data[input.name] = input.value; });
 
-  inputs.forEach(input => {
-    data[input.name] = input.value;
-  });
+  const btn = document.querySelector("button");
+  btn.disabled = true; // 防止重复点击
+  btn.innerText = "Sending...";
 
   fetch("https://script.google.com/macros/s/AKfycbztVgSXzMgmqnW9PT8L8QnZRTajLRHLOAwEExeTWBBYTzM5tnF60Ul_WXjphmJHXFeq/exec", {
     method: "POST",
+    mode: "no-cors",
     body: JSON.stringify(data),
     headers: {
       "Content-Type": "application/json"
     }
   })
-  .then(response => response.json())
-  .then(result => {
-    alert("Thank you! Your response has been successfully submitted.");
+  .then(() => {
+    alert("Submission attempt finished. Please check your sheet!");
+    btn.disabled = false;
+    btn.innerText = "Submit";
   })
   .catch(error => {
-    alert("Submission failed. Please try again.");
+    console.error('Error:', error);
+    alert("Submission failed. Error: " + error);
+    btn.disabled = false;
   });
 }
 </script>
 
 </body>
 </html>
+
