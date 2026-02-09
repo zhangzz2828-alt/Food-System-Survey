@@ -85,6 +85,22 @@ human wellbeing for a global population of 8 billion people.
 </ul>
 
 <hr>
+  
+<div style="background-color: #f0f4f8; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+  <h3>Expert Information (Required)</h3>
+  <div style="margin-bottom: 10px;">
+    <label for="Expert_Name">Full Name:</label><br>
+    <input type="text" id="Expert_Name" name="Expert_Name" style="width: 100%; padding: 8px;" required>
+  </div>
+  <div style="margin-bottom: 10px;">
+    <label for="Expert_Email">Email Address:</label><br>
+    <input type="email" id="Expert_Email" name="Expert_Email" style="width: 100%; padding: 8px;" required>
+  </div>
+  <div>
+    <label for="Expert_Org">Organization/Affiliation:</label><br>
+    <input type="text" id="Expert_Org" name="Expert_Org" style="width: 100%; padding: 8px;">
+  </div>
+</div>
 
 <h2>Part I – Second-Level Issues (5E-Based)</h2>
 
@@ -252,33 +268,38 @@ biodiversity loss, and ecological damage arising from food system activities.
 function submitSurvey() {
   const inputs = document.querySelectorAll("input, textarea");
   let data = {};
-  inputs.forEach(input => { data[input.name] = input.value; });
+  let isValid = true;
 
-  const btn = document.querySelector("button");
-  btn.disabled = true; // 防止重复点击
-  btn.innerText = "Sending...";
+  const name = document.getElementsByName("Expert_Name")[0].value;
+  const email = document.getElementsByName("Expert_Email")[0].value;
+
+  if (!name || !email) {
+    alert("Please fill in your name and email address.");
+    return; 
+  }
+
+  inputs.forEach(input => {
+    data[input.name] = input.type === "number" ? Number(input.value) : input.value;
+  });
 
   fetch("https://script.google.com/macros/s/AKfycbztVgSXzMgmqnW9PT8L8QnZRTajLRHLOAwEExeTWBBYTzM5tnF60Ul_WXjphmJHXFeq/exec", {
     method: "POST",
-    mode: "no-cors",
+    mode: 'no-cors', 
     body: JSON.stringify(data),
     headers: {
       "Content-Type": "application/json"
     }
   })
   .then(() => {
-    alert("Submission attempt finished. Please check your sheet!");
-    btn.disabled = false;
-    btn.innerText = "Submit";
+    alert("Thank you! Your response has been successfully submitted.");
   })
   .catch(error => {
-    console.error('Error:', error);
-    alert("Submission failed. Error: " + error);
-    btn.disabled = false;
+    alert("Submission failed. Please try again.");
   });
 }
 </script>
 
 </body>
 </html>
+
 
